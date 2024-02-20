@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/osean-man/pinned/internal/database"
+	"github.com/osean-man/pinner/internal/database"
 	"github.com/spf13/cobra"
 )
 

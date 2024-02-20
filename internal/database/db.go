@@ -28,7 +28,6 @@ func InitializeDB() (*sql.DB, error) {
 		return nil, fmt.Errorf("error opening database: %w", err)
 	}
 
-	// Create the table if it doesn't exist
 	sqlStmt := ` 
     CREATE TABLE IF NOT EXISTS pins (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
