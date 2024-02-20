@@ -24,7 +24,7 @@ var removeCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		err = database.DeletePin(db, id)
+		err = database.RemovePin(db, id)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "Error removing pin:", err)
 			os.Exit(1)

@@ -92,7 +92,7 @@ func GetPins(db *sql.DB) ([]Pin, error) {
 	return pins, nil
 }
 
-func DeletePin(db *sql.DB, id int) error {
+func RemovePin(db *sql.DB, id int) error {
 	stmt, err := db.Prepare("DELETE FROM pins WHERE id = ?")
 	if err != nil {
 		return fmt.Errorf("error preparing statement: %w", err)
