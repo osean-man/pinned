@@ -27,14 +27,29 @@ var removeCmd = &cobra.Command{
 		}
 
 		// Display Menu
-		items := make([]string, len(pins))
+		items := make([]Pin, len(pins))
 		for i, p := range pins {
-			items[i] = fmt.Sprintf("%d. %s", i+1, p.Command)
+			items[i] = Pin{ID: p.ID, Command: p.Command}
+		}
+
+		searcher := func(input string, index int) bool {
+			pin := items[index]
+			return strings.Contains(strings.ToLower(pin.Command), strings.ToLower(input))
+		}
+
+		templates := &promptui.SelectTemplates{
+			Label:    "{{ . }}",
+			Active:   "📌 {{ .Command | green }}",
+			Inactive: "  {{ .Command }}",
+			Selected: "✖️ {{ .Command | red | cyan }}",
 		}
 
 		prompt := promptui.Select{
-			Label: "Select a command to remove",
-			Items: items,
+			Label:     "Select a command to remove",
+			Items:     items,
+			Templates: templates,
+			Size:      10, // Adjust if needed
+			Searcher:  searcher,
 		}
 
 		index, _, err := prompt.Run()
