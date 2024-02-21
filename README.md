@@ -46,7 +46,7 @@ pinner remove
 Keep in mind this is just a little utility I made for myself. It's definitely not secure and upon selecting a command it
 will execute it. You should not use this if you are in an env with more than yourself. Even then, don't use it. Yet. :)
 
-I've also noticed that there are some issues if you save a command and then you want to execute that and 0ee it into a 
+I've also noticed that there are some issues if you save a command, and then you want to execute that and tee it into a 
 file. The first line will actually be the command you ran. I don't have the will to fix it because it's not
 an issue for me. :)
 
