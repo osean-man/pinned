@@ -3,7 +3,6 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"github.com/charmbracelet/log"
 	"os"
 	"path/filepath"
 
@@ -23,7 +22,7 @@ func InitializeDB() (*sql.DB, error) {
 		return nil, fmt.Errorf("error getting home directory: %w", err)
 	}
 
-	configDir := filepath.Join(homeDir, ".config", "pinned")
+	configDir := filepath.Join(homeDir, ".config", "pinner")
 	err = os.MkdirAll(configDir, 0755)
 	if err != nil {
 		return nil, fmt.Errorf("error creating config directory: %w", err)
@@ -60,7 +59,7 @@ func GetPinByID(db *sql.DB, id int) (string, error) {
 }
 
 func AddPin(db *sql.DB, command string) error {
-	log.Infof("Adding command: %v", command)
+	fmt.Printf("Adding command: %v", command)
 	stmt, err := db.Prepare("INSERT INTO pins(command) VALUES(?)")
 	if err != nil {
 		return fmt.Errorf("error preparing statement: %w", err)
@@ -68,7 +67,7 @@ func AddPin(db *sql.DB, command string) error {
 	defer func(stmt *sql.Stmt) {
 		err := stmt.Close()
 		if err != nil {
-			log.Errorf("error closing statement: %v", err)
+			fmt.Printf("error closing statement: %v", err)
 		}
 	}(stmt)
 
@@ -87,7 +86,7 @@ func GetPins(db *sql.DB) ([]Pin, error) {
 	defer func(rows *sql.Rows) {
 		err := rows.Close()
 		if err != nil {
-			log.Errorf("error closing rows: %v", err)
+			fmt.Printf("error closing rows: %v", err)
 		}
 	}(rows)
 
@@ -111,7 +110,7 @@ func RemovePin(db *sql.DB, id int) error {
 	defer func(stmt *sql.Stmt) {
 		err := stmt.Close()
 		if err != nil {
-			log.Errorf("error closing statement: %v", err)
+			fmt.Printf("error closing statement: %v", err)
 		}
 	}(stmt)
 
@@ -130,7 +129,7 @@ func UpdatePin(db *sql.DB, id int, command string) error {
 	defer func(stmt *sql.Stmt) {
 		err := stmt.Close()
 		if err != nil {
-			log.Errorf("error closing statement: %v", err)
+			fmt.Printf("error closing statement: %v", err)
 		}
 	}(stmt)
 

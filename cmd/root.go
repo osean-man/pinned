@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"database/sql"
-	"github.com/charmbracelet/log"
+	"fmt"
 	"github.com/manifoldco/promptui"
 	"github.com/osean-man/pinner/internal/database"
 	"github.com/spf13/cobra"
@@ -29,7 +29,7 @@ var rootCmd = &cobra.Command{
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
-		log.Error(os.Stderr, err)
+		_, _ = fmt.Fprintln(os.Stderr, "Error:", err)
 		os.Exit(1)
 	}
 }
@@ -38,7 +38,7 @@ func init() {
 	var err error
 	db, err = database.InitializeDB()
 	if err != nil {
-		log.Error(os.Stderr, err)
+		_, _ = fmt.Fprintln(os.Stderr, "Error:", err)
 		os.Exit(1)
 	}
 }
@@ -46,12 +46,12 @@ func init() {
 func showDefaultMenu() {
 	pins, err := database.GetPins(db)
 	if err != nil {
-		log.Error(os.Stderr, "Error fetching pins:", err)
+		_, _ = fmt.Fprintln(os.Stderr, "Error:", err)
 		os.Exit(1)
 	}
 
 	if len(pins) == 0 {
-		log.Warn("You haven't added any pins yet.")
+		fmt.Println("You haven't added any pins yet.")
 		prompt := promptui.Prompt{
 			Label:     "Do you want to add one now?",
 			IsConfirm: true,
@@ -59,7 +59,7 @@ func showDefaultMenu() {
 
 		result, err := prompt.Run()
 		if err != nil {
-			log.Errorf("Error getting input: %v", err)
+			fmt.Printf("Error getting input: %v", err)
 			return
 		}
 
@@ -70,17 +70,16 @@ func showDefaultMenu() {
 
 			newCommand, err := prompt.Run()
 			if err != nil {
-				log.Errorf("Error getting input: %v", err)
 				return
 			}
 
 			err = database.AddPin(db, newCommand)
 			if err != nil {
-				log.Errorf("Error adding pin: %v", err)
+				fmt.Printf("Error adding pin: %v", err)
 				return
 			}
 
-			log.Infof("Command added successfully!")
+			fmt.Println("Command added successfully!")
 		}
 		return
 	}
@@ -112,24 +111,29 @@ func showDefaultMenu() {
 
 	index, _, err := prompt.Run()
 	if err != nil {
-		log.Errorf("Error selecting command: %v", err)
+		fmt.Printf("Error selecting command: %v", err)
 		return
 	}
 
 	selectedCommandID := pins[index].ID
 	selectedCommand, err := database.GetPinByID(db, selectedCommandID)
 	if err != nil {
-		log.Errorf("Error fetching command: %v", err)
+		fmt.Printf("Error fetching command: %v", err)
 		return
 	}
 
-	cmdArgs := strings.Fields(selectedCommand)
-	cmd := exec.Command(cmdArgs[0], cmdArgs[1:]...)
+	userShell := os.Getenv("SHELL")
+	if userShell == "" {
+		userShell = "bash"
+	}
+
+	cmdArgs := []string{"-c", selectedCommand}
+	cmd := exec.Command(userShell, cmdArgs...)
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
 	err = cmd.Run()
 	if err != nil {
-		log.Errorf("Error executing command: %v", err)
+		fmt.Printf("Error executing command: %v", err)
 	}
 }

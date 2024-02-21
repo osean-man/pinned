@@ -17,7 +17,7 @@ var removeCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		pins, err := database.GetPins(db)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "Error fetching pins:", err)
+			fmt.Println("Error fetching pins:", err, os.Stderr)
 			os.Exit(1)
 		}
 
@@ -48,13 +48,13 @@ var removeCmd = &cobra.Command{
 			Label:     "Select a command to remove",
 			Items:     items,
 			Templates: templates,
-			Size:      10, // Adjust if needed
+			Size:      10,
 			Searcher:  searcher,
 		}
 
 		index, _, err := prompt.Run()
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "Error selecting command:", err)
+			fmt.Println("Error selecting command:", err, os.Stderr)
 			os.Exit(1)
 		}
 
@@ -66,7 +66,7 @@ var removeCmd = &cobra.Command{
 		reader := bufio.NewReader(os.Stdin)
 		confirmation, err := reader.ReadString('\n')
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "Error reading confirmation:", err)
+			fmt.Println("Error reading confirmation:", err, os.Stderr)
 			os.Exit(1)
 		}
 
@@ -80,7 +80,7 @@ var removeCmd = &cobra.Command{
 		// Proceed with Removal
 		err = database.RemovePin(db, selectedCommandID)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "Error removing pin:", err)
+			fmt.Println("Error removing pin:", err, os.Stderr)
 			os.Exit(1)
 		}
 

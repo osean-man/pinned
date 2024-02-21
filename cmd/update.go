@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/charmbracelet/log"
 	"os"
 	"strings"
 
@@ -17,7 +16,7 @@ var updateCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		pins, err := database.GetPins(db)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "Error fetching pins:", err)
+			fmt.Println("Error fetching pins:", err, os.Stderr)
 			os.Exit(1)
 		}
 
@@ -53,7 +52,7 @@ var updateCmd = &cobra.Command{
 
 		index, _, err := prompt.Run()
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "Error selecting command to update:", err)
+			fmt.Println("Error selecting command to update:", err, os.Stderr)
 			os.Exit(1)
 		}
 
@@ -67,17 +66,17 @@ var updateCmd = &cobra.Command{
 
 		newCommand, err := promptForNewCommand.Run()
 		if err != nil {
-			log.Errorf("Error reading new command: %s", err)
+			fmt.Printf("Error reading new command: %s", err)
 			os.Exit(1)
 		}
 
 		err = database.UpdatePin(db, selectedCommandID, newCommand)
 		if err != nil {
-			log.Errorf("Error updating pin: %s", err)
+			fmt.Printf("Error updating pin: %s", err)
 			os.Exit(1)
 		}
 
-		log.Info("Command updated successfully!")
+		fmt.Println("Command updated successfully!")
 	},
 }
 

@@ -3,13 +3,11 @@ package cmd
 import (
 	"bufio"
 	"fmt"
-	"github.com/charmbracelet/log"
+	"github.com/osean-man/pinner/internal/database"
+	"github.com/spf13/cobra"
 	"io"
 	"os"
 	"strings"
-
-	"github.com/osean-man/pinner/internal/database"
-	"github.com/spf13/cobra"
 )
 
 var addCmd = &cobra.Command{
@@ -23,23 +21,23 @@ echo "ls -la" | pinner add`,
 
 		existingPins, err := database.GetPins(db)
 		if err != nil {
-			log.Errorf("Error fetching pins: %s", err)
+			fmt.Printf("Error fetching pins: %s", err)
 			os.Exit(1)
 		}
 		for _, pin := range existingPins {
 			if pin.Command == command {
-				log.Error("Error: A command with the same text already exists.")
+				fmt.Println("Error: A command with the same text already exists.")
 				os.Exit(1)
 			}
 		}
 
 		err = database.AddPin(db, command)
 		if err != nil {
-			log.Errorf("Error adding pin: %s", err)
+			fmt.Printf("Error adding pin: %s", err)
 			os.Exit(1)
 		}
 
-		log.Info("Command pinned successfully!")
+		fmt.Println("Command pinned successfully!")
 	},
 }
 
@@ -48,7 +46,7 @@ func getCommand(stdin io.Reader, args []string) string {
 	reader := bufio.NewReader(stdin)
 	command, err := reader.ReadString('\n')
 	if err != nil && err != io.EOF {
-		log.Errorf("Error reading input: %s", err)
+		fmt.Printf("Error reading input: %s", err)
 		os.Exit(1)
 	}
 

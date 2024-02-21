@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/charmbracelet/log"
 	"os"
 
 	"github.com/jedib0t/go-pretty/v6/table"
@@ -16,7 +15,7 @@ var listCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		pins, err := database.GetPins(db)
 		if err != nil {
-			log.Errorf("Error fetching pins: %s", err)
+			fmt.Printf("Error fetching pins: %s", err)
 			os.Exit(1)
 		}
 
