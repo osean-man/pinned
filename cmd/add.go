@@ -15,6 +15,9 @@ import (
 var addCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Add a new pinned command",
+	Long: `Add a new pinned command to your list of frequently used commands. You can also pipe in a command with echo:
+echo "ls -la" | pinner add`,
+
 	Run: func(cmd *cobra.Command, args []string) {
 		command := getCommand(os.Stdin, args)
 

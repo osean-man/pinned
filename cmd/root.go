@@ -82,10 +82,9 @@ func showDefaultMenu() {
 
 			log.Infof("Command added successfully!")
 		}
-		return // Exit the function if no pins exist
+		return
 	}
 
-	// Display commands with numbers
 	items := make([]Pin, len(pins))
 	for i, p := range pins {
 		items[i] = Pin{ID: p.ID, Command: p.Command}
@@ -117,7 +116,6 @@ func showDefaultMenu() {
 		return
 	}
 
-	// Fetch command using GetPinByID
 	selectedCommandID := pins[index].ID
 	selectedCommand, err := database.GetPinByID(db, selectedCommandID)
 	if err != nil {
@@ -125,7 +123,6 @@ func showDefaultMenu() {
 		return
 	}
 
-	// Execute the command
 	cmdArgs := strings.Fields(selectedCommand)
 	cmd := exec.Command(cmdArgs[0], cmdArgs[1:]...)
 	cmd.Stdout = os.Stdout

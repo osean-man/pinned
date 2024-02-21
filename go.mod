@@ -4,6 +4,7 @@ go 1.21.3
 
 require (
 	github.com/charmbracelet/log v0.3.1
+	github.com/jedib0t/go-pretty/v6 v6.5.4
 	github.com/manifoldco/promptui v0.9.0
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/spf13/cobra v1.8.0
@@ -23,5 +24,5 @@ require (
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect
-	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/sys v0.16.0 // indirect
 )
