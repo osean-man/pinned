@@ -1,8 +1,8 @@
 # Pinner
 
 A very simple tool to pin commands and store them into a local database. It's kind of like bash history, but 
-organized with only things you put into the list. It uses a local sqlite3 db so you have full control of it. I might make
-a way to sync dbs across users but right now I'm just living my best life and I'll add features as we go.
+organized with only things you put into the list. It uses a local sqlite3 db, so you have full control over your data.
+I might make a way to sync dbs across users but right now I'm just living my best life and I'll add features as we go.
 
 ## Usage
 
