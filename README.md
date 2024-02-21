@@ -1,7 +1,8 @@
 # Pinner
 
 A very simple tool to pin commands and store them into a local database. It's kind of like bash history, but 
-organized with only things you put into the list. 
+organized with only things you put into the list. It uses a local sqlite3 db so you have full control of it. I might make
+a way to sync dbs across users but right now I'm just living my best life and I'll add features as we go.
 
 ## Usage
 
@@ -41,9 +42,12 @@ pinner update
 pinner remove 
 ```
 
+### SECURITY IS NOT A PRIORITY HERE
 Keep in mind this is just a little utility I made for myself. It's definitely not secure and upon selecting a command it
-will execute it. I've also noticed that there are some issues if you save a command and then you want to execute that and 
-tee it into a file. The first line will actually be the command you ran. I don't have the will to fix it because it's not
+will execute it. You should not use this if you are in an env with more than yourself. Even then, don't use it. Yet. :)
+
+I've also noticed that there are some issues if you save a command and then you want to execute that and 0ee it into a 
+file. The first line will actually be the command you ran. I don't have the will to fix it because it's not
 an issue for me. :)
 
 
