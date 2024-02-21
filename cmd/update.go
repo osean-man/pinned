@@ -60,8 +60,9 @@ var updateCmd = &cobra.Command{
 		selectedCommandID := pins[index].ID
 
 		promptForNewCommand := promptui.Prompt{
-			Label:   "Enter the updated command: ",
-			Default: pins[index].Command,
+			Label:     "Enter the updated command",
+			Default:   pins[index].Command,
+			AllowEdit: true,
 		}
 
 		newCommand, err := promptForNewCommand.Run()
