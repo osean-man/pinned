@@ -1,7 +1,11 @@
 package main
 
-import "github.com/osean-man/pinner/cmd"
+import (
+	"github.com/charmbracelet/log"
+	"github.com/osean-man/pinner/cmd"
+)
 
 func main() {
+	log.SetTimeFormat("")
 	cmd.Execute()
 }

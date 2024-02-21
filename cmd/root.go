@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"database/sql"
-	"fmt"
+	"github.com/charmbracelet/log"
 	"github.com/manifoldco/promptui"
 	"github.com/osean-man/pinner/internal/database"
 	"github.com/spf13/cobra"
@@ -29,7 +29,7 @@ var rootCmd = &cobra.Command{
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		log.Error(os.Stderr, err)
 		os.Exit(1)
 	}
 }
@@ -38,7 +38,7 @@ func init() {
 	var err error
 	db, err = database.InitializeDB()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		log.Error(os.Stderr, err)
 		os.Exit(1)
 	}
 }
@@ -46,12 +46,12 @@ func init() {
 func showDefaultMenu() {
 	pins, err := database.GetPins(db)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error fetching pins:", err)
+		log.Error(os.Stderr, "Error fetching pins:", err)
 		os.Exit(1)
 	}
 
 	if len(pins) == 0 {
-		fmt.Println("You haven't added any pins yet.")
+		log.Warn("You haven't added any pins yet.")
 		prompt := promptui.Prompt{
 			Label:     "Do you want to add one now?",
 			IsConfirm: true,
@@ -59,7 +59,7 @@ func showDefaultMenu() {
 
 		result, err := prompt.Run()
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "Error getting input:", err)
+			log.Errorf("Error getting input: %v", err)
 			return
 		}
 
@@ -70,17 +70,17 @@ func showDefaultMenu() {
 
 			newCommand, err := prompt.Run()
 			if err != nil {
-				fmt.Fprintln(os.Stderr, "Error getting input:", err)
+				log.Errorf("Error getting input: %v", err)
 				return
 			}
 
 			err = database.AddPin(db, newCommand)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, "Error adding pin:", err)
+				log.Errorf("Error adding pin: %v", err)
 				return
 			}
 
-			fmt.Println("Command added successfully!")
+			log.Infof("Command added successfully!")
 		}
 		return // Exit the function if no pins exist
 	}
@@ -104,7 +104,7 @@ func showDefaultMenu() {
 	}
 
 	prompt := promptui.Select{
-		Label:     "Select a pinned command",
+		Label:     "Select a pinned command: ",
 		Items:     items,
 		Templates: templates,
 		Size:      10,
@@ -113,7 +113,7 @@ func showDefaultMenu() {
 
 	index, _, err := prompt.Run()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error selecting command:", err)
+		log.Errorf("Error selecting command: %v", err)
 		return
 	}
 
@@ -121,7 +121,7 @@ func showDefaultMenu() {
 	selectedCommandID := pins[index].ID
 	selectedCommand, err := database.GetPinByID(db, selectedCommandID)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error fetching command:", err)
+		log.Errorf("Error fetching command: %v", err)
 		return
 	}
 
@@ -133,6 +133,6 @@ func showDefaultMenu() {
 	cmd.Stderr = os.Stderr
 	err = cmd.Run()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error executing command:", err)
+		log.Errorf("Error executing command: %v", err)
 	}
 }

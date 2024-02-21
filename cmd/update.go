@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/charmbracelet/log"
 	"github.com/osean-man/pinner/internal/database"
 	"github.com/spf13/cobra"
 )
@@ -14,13 +15,13 @@ var updateCmd = &cobra.Command{
 	Short: "Update a pinned command",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 2 {
-			fmt.Fprintln(os.Stderr, "Error: You must provide the ID of the command to update and the new command")
+			log.Errorf("Error: You must provide the ID of the command to update and the new command: %v", os.Stderr)
 			os.Exit(1)
 		}
 
 		id, err := strconv.Atoi(args[0])
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "Error: Invalid ID format")
+			log.Errorf("Error: Invalid ID format: %v", os.Stderr)
 			os.Exit(1)
 		}
 
@@ -28,7 +29,7 @@ var updateCmd = &cobra.Command{
 
 		err = database.UpdatePin(db, id, newCommand)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "Error updating pin:", err)
+			log.Errorf("Error updating pin:: %v", err)
 			os.Exit(1)
 		}
 

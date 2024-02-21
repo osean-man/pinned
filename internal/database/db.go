@@ -3,11 +3,18 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"github.com/charmbracelet/log"
 	"os"
 	"path/filepath"
 
 	_ "github.com/mattn/go-sqlite3"
 )
+
+type Pin struct {
+	ID        int    `json:"id"`
+	Command   string `json:"command"`
+	Timestamp string `json:"timestamp"`
+}
 
 // InitializeDB creates the database if it doesn't exist and returns a connection handle
 func InitializeDB() (*sql.DB, error) {
@@ -43,12 +50,6 @@ func InitializeDB() (*sql.DB, error) {
 	return db, nil
 }
 
-type Pin struct {
-	ID        int    `json:"id"`
-	Command   string `json:"command"`
-	Timestamp string `json:"timestamp"`
-}
-
 func GetPinByID(db *sql.DB, id int) (string, error) {
 	var command string
 	err := db.QueryRow("SELECT command FROM pins WHERE id = ?", id).Scan(&command)
@@ -59,12 +60,17 @@ func GetPinByID(db *sql.DB, id int) (string, error) {
 }
 
 func AddPin(db *sql.DB, command string) error {
-	fmt.Println("Adding command:", command)
+	log.Infof("Adding command: %v", command)
 	stmt, err := db.Prepare("INSERT INTO pins(command) VALUES(?)")
 	if err != nil {
 		return fmt.Errorf("error preparing statement: %w", err)
 	}
-	defer stmt.Close()
+	defer func(stmt *sql.Stmt) {
+		err := stmt.Close()
+		if err != nil {
+			log.Errorf("error closing statement: %v", err)
+		}
+	}(stmt)
 
 	_, err = stmt.Exec(command)
 	if err != nil {
@@ -78,7 +84,12 @@ func GetPins(db *sql.DB) ([]Pin, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error executing select: %w", err)
 	}
-	defer rows.Close()
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+			log.Errorf("error closing rows: %v", err)
+		}
+	}(rows)
 
 	var pins []Pin
 	for rows.Next() {
@@ -97,7 +108,12 @@ func RemovePin(db *sql.DB, id int) error {
 	if err != nil {
 		return fmt.Errorf("error preparing statement: %w", err)
 	}
-	defer stmt.Close()
+	defer func(stmt *sql.Stmt) {
+		err := stmt.Close()
+		if err != nil {
+			log.Errorf("error closing statement: %v", err)
+		}
+	}(stmt)
 
 	_, err = stmt.Exec(id)
 	if err != nil {
@@ -111,7 +127,12 @@ func UpdatePin(db *sql.DB, id int, command string) error {
 	if err != nil {
 		return fmt.Errorf("error preparing statement: %w", err)
 	}
-	defer stmt.Close()
+	defer func(stmt *sql.Stmt) {
+		err := stmt.Close()
+		if err != nil {
+			log.Errorf("error closing statement: %v", err)
+		}
+	}(stmt)
 
 	_, err = stmt.Exec(command, id)
 	if err != nil {
