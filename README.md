@@ -20,12 +20,20 @@ Available Commands:
   update      Update a pinned command
 
 Flags:
+  -c, --copy   Copy the command to your clipboard instead of executing it
   -h, --help   help for pinner
+
 
 ```
 
 ### Examples
 ```bash
+# Access and execute a pinned command
+pinner
+
+# Copy a command to your clipboard
+pinner -c 
+
 # Add a new pinned command
 pinner add "ls -la"
 
