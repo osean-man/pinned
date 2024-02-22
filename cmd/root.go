@@ -3,6 +3,7 @@ package cmd
 import (
 	"database/sql"
 	"fmt"
+	"github.com/atotto/clipboard"
 	"github.com/manifoldco/promptui"
 	"github.com/osean-man/pinner/internal/database"
 	"github.com/spf13/cobra"
@@ -17,6 +18,7 @@ type Pin struct {
 }
 
 var db *sql.DB
+var copyFlag bool
 
 var rootCmd = &cobra.Command{
 	Use:   "pinner",
@@ -41,6 +43,7 @@ func init() {
 		_, _ = fmt.Fprintln(os.Stderr, "Error:", err)
 		os.Exit(1)
 	}
+	rootCmd.PersistentFlags().BoolVarP(&copyFlag, "copy", "c", false, "Copy the command to your clipboard instead of executing it")
 }
 
 func showDefaultMenu() {
@@ -59,7 +62,6 @@ func showDefaultMenu() {
 
 		result, err := prompt.Run()
 		if err != nil {
-			fmt.Printf("Error getting input: %v", err)
 			return
 		}
 
@@ -119,6 +121,16 @@ func showDefaultMenu() {
 	selectedCommand, err := database.GetPinByID(db, selectedCommandID)
 	if err != nil {
 		fmt.Printf("Error fetching command: %v", err)
+		return
+	}
+
+	if copyFlag {
+		err := clipboard.WriteAll(selectedCommand)
+		if err != nil {
+			fmt.Printf("Error copying command to clipboard: %v", err)
+			return
+		}
+		fmt.Println("Command copied to clipboard!")
 		return
 	}
 
