@@ -113,7 +113,6 @@ func showDefaultMenu() {
 
 	index, _, err := prompt.Run()
 	if err != nil {
-		fmt.Printf("Error selecting command: %v", err)
 		return
 	}
 
