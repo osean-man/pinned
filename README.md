@@ -84,5 +84,4 @@ GOOS=windows GOARCH=amd64 go build -o pinner.exe main.go
 I have not tested this, there are no tests and I only run it on Linux so, I have no idea if it works on Windows or Mac.
 
 ## License
-Do whatever you want with it, just give me a little shout out if you use it for something cool. ☮️
-```
+[GOOD LUCK WITH THAT SHIT PUBLIC LICENSE](https://github.com/osean-man/pinner/blob/master/LICENSE)
